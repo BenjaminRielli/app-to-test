@@ -1,0 +1,166 @@
+<app-nav-bar></app-nav-bar>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet" />
+<div class="container-fluid text-center">
+  <div class="row align-items-start ">
+    <!-- Columna lateral para los botones -->
+    <div class="col-2">
+      <div class="sidebar-buttons">
+        <button class="sidebar-btn" (click)="mostrarFormulario()">
+          <span class="material-symbols-outlined">receipt_long</span>
+          <span class="btn-text">Nueva Factura</span>
+        </button>
+        <button class="sidebar-btn" [routerLink]="'/cajamanager'">
+          <span class="material-symbols-outlined">mintmark</span>
+          <span class="btn-text">Caja</span>
+        </button>
+        <button class="sidebar-btn" (click)="exportPDF()">
+          <span class="material-symbols-outlined">lab_profile</span>
+          <span class="btn-text">Reporte</span>
+        </button>
+        <button class="sidebar-btn" (click)="cerrarMes()">
+          <span class="material-symbols-outlined">disabled_by_default</span>
+          <span class="btn-text">Cerrar Mes</span>
+        </button>
+      </div>
+      
+      <!-- Resumen financiero -->
+      
+    </div>
+    
+    <!-- Contenido principal -->
+    <div class="col-8">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title">Facturación</h4>
+        </div>
+
+        <div id="content" class="table-container">
+          <div class="card cierre-mes" *ngIf="cerrar">
+            <h3 class="cierre-titulo">Cierre Mensual</h3>
+            <select [(ngModel)]="mesSeleccionado" class="mes-select">
+              <option value="" disabled selected>Seleccione un mes</option>
+              <option *ngFor="let mes of meses" [value]="mes">{{ mes | titlecase }}</option>
+            </select>
+            <div class="botones-accion">
+              <button class="btn-cerrar" (click)="confirmarCierre()">
+                <i class="fas fa-calendar-times"></i> Cerrar Mes
+              </button>
+              <button class="btn-cancelar" (click)="cerrarMes()">
+                <i class="fas fa-times"></i> Cancelar
+              </button>
+            </div>
+          </div>
+          <app-facturacion-form *ngIf="mostrarForm" (closeForm)="ocultarFormulario()"></app-facturacion-form>
+          <app-entrada-form *ngIf="mostrarFormEntrada"
+            (closeFormEntrada)="ocultarFormularioEntrada()"></app-entrada-form>
+          <div *ngIf="!mostrarForm && !mostrarFormEntrada && !cerrar">
+
+            <h3 class="subtitulo"> GASTOS PREVISTOS</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th class="hidden">ID Facturación</th>
+                  <th style="min-width: 100px; max-width: 200px;">Fecha</th>
+                  <th>Empresa</th>
+                  <th>Monto</th>
+                  <th>Estado</th>
+                  <th colspan="4">Observación</th>
+                  <th colspan="2">Acciones</th>
+                </tr>
+              </thead>
+              <tbody style="font-size: 0.9rem;">
+                <tr *ngFor="let facturacion of filteredFacturaciones">
+                  <td class="hidden">{{ facturacion.idfacturacion }}</td>
+                  <td> {{ formatDate(facturacion.fecha)}} </td>
+                  <td>{{ facturacion.empresa }}</td>
+                  <td>{{ facturacion.monto | currency }}</td>
+                  <td>{{ facturacion.estado }}</td>
+                  <td colspan="4">{{ facturacion.observacion }}</td>
+                  <td style="justify-self: center;" colspan="2">
+                    <button (click)="moveClick(facturacion)"><span class="material-symbols-outlined">
+                        attach_money
+                      </span></button>
+                    <button class="editButton" (click)="editAction(facturacion)"><span
+                        class="material-symbols-outlined">
+                        edit_square
+                      </span></button>
+                    <button class="deleteButton" (click)="deleteAction(facturacion)"><span
+                        class="material-symbols-outlined">
+                        delete
+                      </span></button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <h5>Total de Gastos Previstos {{totalPendiente | currency}}</h5>
+            <!-- Subtítulo "FACTURAS PAGAS" -->
+            <h3 class="subtitulo">FACTURAS PAGAS</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th class="hidden">ID Facturación</th>
+                  <th style="min-width: 100px; max-width: 200px;">Fecha</th>
+                  <th>Empresa</th>
+                  <th>Monto</th>
+                  <th>Estado</th>
+                  <th colspan="4">Observación</th>
+                  <th colspan="2">Acciones</th>
+                </tr>
+              </thead>
+              <tbody style="font-size: 0.9rem;">
+                <tr *ngFor="let facturacion of pagadasFacturaciones">
+                  <td class="hidden">{{ facturacion.idfacturacion }}</td>
+                  <td> {{ formatDate(facturacion.fecha)}} </td>
+                  <td>{{ facturacion.empresa }}</td>
+                  <td>{{ facturacion.monto | currency }}</td>
+                  <td>{{ facturacion.estado }}</td>
+                  <td colspan="4">{{ facturacion.observacion }}</td>
+                  <td style="justify-self: center;" colspan="2">
+                    <button (click)="moveClick(facturacion)"><span class="material-symbols-outlined">
+                        attach_money
+                      </span></button>
+                    <button class="editButton" (click)="editAction(facturacion)"><span
+                        class="material-symbols-outlined">
+                        edit_square
+                      </span></button>
+                    <button class="deleteButton" (click)="deleteAction(facturacion)"><span
+                        class="material-symbols-outlined">
+                        delete
+                      </span></button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <h5>Total de Facturas Pagadas {{totalPagado | currency}}</h5>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-2">
+      <div class="card2 p-2 mt-4">
+        <div class="w-100">
+          <table class="table2 table-sm w-100">
+            <tbody>
+              <tr>
+                <th class="text-nowrap pe-1">G.PREV.: <strong>{{ totalPendiente | currency }}</strong></th>
+                <td></td>
+              </tr>
+              <tr>
+                <th class="text-nowrap pe-1">F.PAG.: <strong>{{ totalPagado | currency }}</strong></th>
+              </tr>
+              <tr>
+                <th class="text-nowrap pe-1">ING.MES.: <strong>{{ totalEntrada | currency }}</strong></th>
+              </tr>
+              <tr>
+                <th class="text-nowrap pe-1">CAJA: <strong>{{ enCaja | currency }}</strong></th>
+              </tr>
+            </tbody>
+          </table>
+        </div>  
+      </div>
+    </div>
+  </div>
+  
+</div>

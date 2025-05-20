@@ -1,0 +1,107 @@
+/* Asegúrate de que el contenedor ocupe todo el ancho */
+.container-fluid {
+    padding-left: 0; /* Eliminar el padding izquierdo */
+    padding-right: 0; /* Eliminar el padding derecho */
+}
+
+/* Estilo para el menú lateral */
+.menu-lateral {
+    padding: 20px; /* Espaciado interno */
+    background-color: #f9f9f9; /* Color de fondo claro para el menú lateral */
+    border-right: 1px solid #dee2e6; /* Línea de separación a la derecha */
+    width: 250px; /* Ancho del menú lateral */
+    
+}
+
+/* Estilo para el contenido central */
+.contenido-central {
+    padding: 10px; /* Espaciado interno */
+}
+
+/* Separar el contenido central de la barra de navegación y el menú lateral */
+h3 {
+    margin-top: 10px; /* Espacio superior para el título */
+}
+h5{
+    margin: 10px 10px; /* Espacio superior e inferior para el subtítulo */
+}
+
+ /* Estilos para el panel de acciones de usuario */
+
+  
+
+  
+  .user-actions-header .material-symbols-outlined {
+    color: #007bff;
+    margin-right: 8px;
+    font-size: 20px;
+  }
+  
+  .user-actions-title {
+    font-weight: 600;
+    color: #495057;
+    font-size: 14px;
+  }
+  
+  .user-actions-content {
+    padding: 5px;
+
+  }
+  
+  .user-action-btn {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+    text-align: left;
+
+  }
+  
+  .user-action-btn .material-symbols-outlined {
+    margin-right: 8px;
+    font-size: 18px;
+  }
+  
+  .logout-btn {
+    background-color: #f8f9fa;
+    color: #dc3545;
+    border: 1px solid #f1f1f1;
+  }
+  
+  .logout-btn:hover {
+    background-color: #dc3545;
+    color: white;
+  }
+  
+  .password-btn {
+    background-color: #f8f9fa;
+    color: #007bff;
+    border: 1px solid #f1f1f1;
+  }
+  
+  .password-btn:hover {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  /* Estilos responsivos */
+  @media (max-width: 768px) {
+    .user-actions-panel {
+      margin-top: 15px;
+    }
+    
+    .user-actions-content {
+      padding: 10px;
+    }
+    
+    .user-action-btn {
+      padding: 8px 12px;
+      font-size: 13px;
+    }
+  }
