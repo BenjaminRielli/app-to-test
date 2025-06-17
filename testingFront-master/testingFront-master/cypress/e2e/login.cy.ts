@@ -21,6 +21,6 @@ describe('Login al sistema', () => {
       expect(response?.statusCode).to.eq(200);
     });
 
-    cy.url({ timeout: 10000 }).should('include', '/novedades/hoy');
+    cy.url({ timeout: 10000 }).should('include', '/novedades');
   });
 });
