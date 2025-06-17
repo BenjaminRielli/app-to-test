@@ -7,7 +7,7 @@ const novedadesController = {
     getAllNovedades: async (req, res) => {
         try {
             // Usar await para manejar la promesa
-            const [results] = await db.query('SELECT * FROM u154726602_equipos.novedades ORDER BY fecha DESC');
+            const [results] = await db.query('SELECT * FROM novedades ORDER BY fecha DESC');
 
             // Si no hay resultados
             if (results.length === 0) {
@@ -31,7 +31,7 @@ const novedadesController = {
     
             const [results] = await db.query(`
 SELECT * 
-FROM u154726602_equipos.novedades 
+FROM novedades 
 WHERE fecha >= CURDATE() - INTERVAL 1 DAY 
   AND fecha < CURDATE() + INTERVAL 1 DAY
 ORDER BY fecha DESC;
@@ -59,7 +59,7 @@ ORDER BY fecha DESC;
             }
 
             // Definir la consulta SQL
-            const query = 'INSERT INTO u154726602_equipos.novedades (fecha, nombre, novedad) VALUES (?, ?, ?)';
+            const query = 'INSERT INTO novedades (fecha, nombre, novedad) VALUES (?, ?, ?)';
 
             // Ejecutar la consulta usando promesas
             const [results] = await db.query(query, [hoy, nombre, novedad]);

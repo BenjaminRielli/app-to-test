@@ -26,7 +26,7 @@ const authController = {
           let results;
           try {
             [results] = await db.query(
-              'SELECT id, username, email, password FROM u154726602_equipos.users WHERE username = ?',
+              'SELECT id, username, email, password FROM users WHERE username = ?',
               [username.trim()]
             );
           } catch (dbError) {
@@ -117,7 +117,7 @@ const authController = {
 
             // Verificar si el usuario ya existe
             const [existingUser] = await db.query(
-                'SELECT id FROM u154726602_equipos.users WHERE username = ? OR email = ?',
+                'SELECT id FROM users WHERE username = ? OR email = ?',
                 [username, email]
             );
 
@@ -130,7 +130,7 @@ const authController = {
 
             // Insertar usuario en la base de datos
             await db.query(
-                'INSERT INTO u154726602_equipos.users (username, password, email) VALUES (?, ?, ?)',
+                'INSERT INTO users (username, password, email) VALUES (?, ?, ?)',
                 [username, hashedPassword, email]
             );
 
@@ -149,7 +149,7 @@ const authController = {
                 return res.status(400).json({ message: "El correo electrónico es obligatorio y debe ser válido." });
             }
     
-            const [results] = await db.query('SELECT * FROM u154726602_equipos.users WHERE email = ?', [email]);
+            const [results] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
     
             if (results.length === 0) {
                 return res.status(404).json({ message: "Usuario no encontrado." });
@@ -208,7 +208,7 @@ const authController = {
             const userId = decoded.id;
     
             // Buscar usuario
-            const [results] = await db.query('SELECT * FROM u154726602_equipos.users WHERE id = ?', [userId]);
+            const [results] = await db.query('SELECT * FROM users WHERE id = ?', [userId]);
             if (results.length === 0) {
                 return res.status(404).json({ message: "Usuario no encontrado." });
             }
@@ -226,7 +226,7 @@ const authController = {
             const hashedNewPassword = await bcrypt.hash(newPassword, SALT_ROUNDS);
     
             // Actualizar en base de datos
-            await db.query('UPDATE u154726602_equipos.users SET password = ? WHERE id = ?', [hashedNewPassword, userId]);
+            await db.query('UPDATE users SET password = ? WHERE id = ?', [hashedNewPassword, userId]);
     
             return res.status(200).json({ message: "Contraseña cambiada correctamente." });
     
@@ -237,7 +237,7 @@ const authController = {
     },
     getUsers : async (req, res) => {
         try {
-            const [results] = await db.query('SELECT id, username, email FROM u154726602_equipos.users');
+            const [results] = await db.query('SELECT id, username, email FROM users');
             if (results.length === 0) {
                 return res.status(404).json({ message: 'No se encontraron usuarios.' });
             }
@@ -273,7 +273,7 @@ const authController = {
             const hashedNewPassword = await bcrypt.hash(newPassword, SALT_ROUNDS);
     
             // Actualizar en base de datos
-            await db.query('UPDATE u154726602_equipos.users SET password = ? WHERE id = ?', [hashedNewPassword, userId]);
+            await db.query('UPDATE users SET password = ? WHERE id = ?', [hashedNewPassword, userId]);
     
             return res.status(200).json({ message: "Contraseña actualizada correctamente." });
     
@@ -286,7 +286,7 @@ const authController = {
         try {
             const { id } = req.body;
             console.log(id)
-            await db.query('DELETE FROM u154726602_equipos.users WHERE id = ?', [id]);
+            await db.query('DELETE FROM users WHERE id = ?', [id]);
             res.status(200).json({ message: "Usuario eliminado correctamente." });
         } catch (err) {
             console.error('Error en deleteUser:', err);
@@ -298,7 +298,7 @@ const authController = {
             const { username, email } = req.body.user;
             const {id} = req.params;
 
-            await db.query('UPDATE u154726602_equipos.users SET username = ?, email = ? WHERE id = ?', [username, email, id]);
+            await db.query('UPDATE users SET username = ?, email = ? WHERE id = ?', [username, email, id]);
             res.status(200).json({ message: "Usuario actualizado correctamente." });
         } catch (err) {
             console.error('Error en updateUser:', err);

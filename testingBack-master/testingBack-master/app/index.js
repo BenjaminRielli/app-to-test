@@ -17,13 +17,14 @@ app.get('/api', (req, res) => {
     res.send('Hello World!');
 });
 
-app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "*"); // Permitir todas las orígenes
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
-});
 app.use(cors({
-    origin: ['http://localhost:4200','http://10.50.50.50'], // Permitir solicitudes desde este origen
+    origin: ['http://localhost:4200', 'http://127.0.0.1:4200', 'http://localhost:3000'], // incluí 127.0.0.1 y otros posibles
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    credentials: true,
+}));
+
+app.use(cors({
+    origin: ['http://localhost:4200','http://10.50.50.50',"*" ], // Permitir solicitudes desde este origen
     methods: 'GET,POST,DELETE', // Métodos permitidos
     credentials: true // Permitir credenciales si es necesario
 }));

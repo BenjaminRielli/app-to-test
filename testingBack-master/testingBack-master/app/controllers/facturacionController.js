@@ -4,7 +4,7 @@ const facturacionController = {
     // Obtener todas las facturaciones
     getAll: async (req, res) => {
         try {
-            const [rows] = await promisePool.query('SELECT * FROM u154726602_equipos.facturacion');
+            const [rows] = await promisePool.query('SELECT * FROM facturacion');
             res.status(200).json(rows);
         } catch (error) {
             res.status(500).json({ error: `Error en la base de datos: ${error.message}` });
@@ -22,7 +22,7 @@ const facturacionController = {
 
         try {
             const [result] = await promisePool.query(
-                'INSERT INTO u154726602_equipos.facturacion (fecha, empresa, monto, estado,observacion) VALUES (?, ?, ?, ?,?)',
+                'INSERT INTO facturacion (fecha, empresa, monto, estado,observacion) VALUES (?, ?, ?, ?,?)',
                 [fecha, empresa, monto, estado, observacion]
             );
             res.status(201).json({ id: result.insertId, fecha, empresa, monto, estado, observacion });
@@ -38,7 +38,7 @@ const facturacionController = {
 
         try {
             const [result] = await promisePool.query(
-                'INSERT INTO u154726602_equipos.entrada (fecha, monto, username, motivo) VALUES (?, ?, ?, ?)',
+                'INSERT INTO entrada (fecha, monto, username, motivo) VALUES (?, ?, ?, ?)',
                 [fecha, monto, username, motivo]
             );
             res.status(201).json({ fecha, monto, username, motivo });
@@ -52,7 +52,7 @@ const facturacionController = {
         const identrada = req.params.identrada; // ID de la entrada a actualizar
         try{
             const [result] = await promisePool.query(
-                'UPDATE u154726602_equipos.entrada SET fecha = ?, monto = ?, username = ?, motivo = ? WHERE identrada = ?',
+                'UPDATE entrada SET fecha = ?, monto = ?, username = ?, motivo = ? WHERE identrada = ?',
                 [fecha, monto, username, motivo, identrada]
             );
 
@@ -62,7 +62,7 @@ const facturacionController = {
 
             // Devuelve el objeto actualizado (opcional)
             const [updatedRow] = await promisePool.query(
-                'SELECT * FROM u154726602_equipos.entrada WHERE identrada = ?',
+                'SELECT * FROM entrada WHERE identrada = ?',
                 [identrada]
             );
 
@@ -78,7 +78,7 @@ const facturacionController = {
         const { identrada } = req.params;
 
         try {
-            const [result] = await promisePool.query('DELETE FROM u154726602_equipos.entrada WHERE identrada = ?', [identrada]);
+            const [result] = await promisePool.query('DELETE FROM entrada WHERE identrada = ?', [identrada]);
             console.log('Resultado de la consulta:', result); // Depuración
             if (result.affectedRows === 0) {
                 return res.status(404).json({ error: 'Entrada no encontrada' });
@@ -105,7 +105,7 @@ const facturacionController = {
 
         try {
             const [result] = await promisePool.query(
-                'UPDATE u154726602_equipos.facturacion SET fecha = ?, empresa = ?, monto = ?, estado = ?, observacion = ? WHERE idfacturacion = ?',
+                'UPDATE facturacion SET fecha = ?, empresa = ?, monto = ?, estado = ?, observacion = ? WHERE idfacturacion = ?',
                 [fecha, empresa, monto, estado, observacion || null, idfacturacion] // observacion puede ser null
             );
 
@@ -115,7 +115,7 @@ const facturacionController = {
 
             // Devuelve el objeto actualizado (opcional)
             const [updatedRow] = await promisePool.query(
-                'SELECT * FROM u154726602_equipos.facturacion WHERE idfacturacion = ?',
+                'SELECT * FROM facturacion WHERE idfacturacion = ?',
                 [idfacturacion]
             );
 
@@ -137,7 +137,7 @@ const facturacionController = {
         }
 
         try {
-            const [result] = await promisePool.query('DELETE FROM u154726602_equipos.facturacion WHERE idfacturacion = ?', [idfacturacion]);
+            const [result] = await promisePool.query('DELETE FROM facturacion WHERE idfacturacion = ?', [idfacturacion]);
             console.log('Resultado de la consulta:', result); // Depuración
             if (result.affectedRows === 0) {
                 return res.status(404).json({ error: 'Facturación no encontrada' });
@@ -154,7 +154,7 @@ const facturacionController = {
         try {
             const [rows] = await promisePool.query(`
                 SELECT SUM(monto) AS total 
-                FROM u154726602_equipos.facturacion 
+                FROM facturacion 
                 WHERE estado LIKE '%pagado%'
             `);
             res.status(200).json({ total: rows[0].total || 0 });
@@ -166,7 +166,7 @@ const facturacionController = {
         try {
             const [rows] = await promisePool.query(`
                 SELECT SUM(monto) AS total 
-                FROM u154726602_equipos.facturacion 
+                FROM facturacion 
                 WHERE estado LIKE '%pendiente%'
             `);
             res.status(200).json({ total: rows[0].total || 0 });
@@ -178,7 +178,7 @@ const facturacionController = {
         try {
             const [rows] = await promisePool.query(`
                 SELECT SUM(monto) AS total 
-                FROM u154726602_equipos.entrada 
+                FROM entrada 
             `);
             res.status(200).json({ total: rows[0].total || 0 });
         } catch (error) {
@@ -189,8 +189,8 @@ const facturacionController = {
         try {
             const [rows] = await promisePool.query(`
                 SELECT 
-    (SELECT COALESCE(SUM(monto), 0) FROM u154726602_equipos.entrada) -
-    (SELECT COALESCE(SUM(monto), 0) FROM u154726602_equipos.facturacion WHERE estado LIKE '%pagado%') AS total;
+    (SELECT COALESCE(SUM(monto), 0) FROM entrada) -
+    (SELECT COALESCE(SUM(monto), 0) FROM facturacion WHERE estado LIKE '%pagado%') AS total;
             `);
             res.status(200).json({ total: rows[0].total || 0 });
         } catch (error) {
@@ -199,7 +199,7 @@ const facturacionController = {
     },
     getAllEntradas: async (req, res) => {
         try {
-            const [rows] = await promisePool.query('SELECT * FROM u154726602_equipos.entrada');
+            const [rows] = await promisePool.query('SELECT * FROM entrada');
             res.status(200).json(rows);
         } catch (error) {
             res.status(500).json({ error: `Error en la base de datos: ${error.message}` });
@@ -211,7 +211,7 @@ const facturacionController = {
         try {
             // Paso 1: Obtener el estado actual
             const [rows] = await promisePool.query(
-                'SELECT estado FROM u154726602_equipos.facturacion WHERE idfacturacion = ?',
+                'SELECT estado FROM facturacion WHERE idfacturacion = ?',
                 [idfacturacion]
             );
 
@@ -234,7 +234,7 @@ const facturacionController = {
 
             // Paso 3: Actualizar el registro
             const [result] = await promisePool.query(
-                'UPDATE u154726602_equipos.facturacion SET estado = ? WHERE idfacturacion = ?',
+                'UPDATE facturacion SET estado = ? WHERE idfacturacion = ?',
                 [nuevoEstado, idfacturacion]
             );
 
