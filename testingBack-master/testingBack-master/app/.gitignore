@@ -11,6 +11,8 @@ config/local.*
 *.log
 logs/
 
+*.txt
+
 # Ignorar archivos de IDE
 .vscode/
 .idea/
